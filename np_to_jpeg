@@ -1,0 +1,46 @@
+### all necessary functions (I think)
+import numpy as np
+import os
+from PIL import Image
+
+###### get the data ######
+x_64_valid = np.load('/kaggle/input/mhsmadataset/x_64_valid.npy')
+x_64_train = np.load('/kaggle/input/mhsmadataset/x_64_train.npy')
+x_64_test = np.load('/kaggle/input/mhsmadataset/x_64_test.npy')
+
+x_128_valid = np.load('/kaggle/input/mhsmadataset/x_128_valid.npy')
+x_128_train = np.load('/kaggle/input/mhsmadataset/x_128_train.npy')
+x_128_test = np.load('/kaggle/input/mhsmadataset/x_128_test.npy')
+
+## example
+#from PIL import Image
+#im = Image.fromarray(x1)
+#im.save("x1.jpeg")
+
+########## function ############
+def np_to_image(data, path):
+    os.makedirs(path)
+    number_of_images = len(data)
+    for i in range(number_of_images):
+        x = data[i]
+        im = Image.fromarray(x)
+        newpath = os.path.join(path,"x_%s"%(i)+".jpeg")
+        im.save(path+"x_%s"%(i)+".jpeg")
+
+########## apply the function ############
+#os.makedirs('./images_64/valid_images')
+#os.makedirs('./images_64/train_images')
+#os.makedirs('./images_64/test_images')
+#os.makedirs('./images_128/valid_images')
+#os.makedirs('./images_128/train_images')
+#os.makedirs('./images_128/test_images')
+
+## 64 version
+np_to_image(x_64_valid, './images_64/valid_images')
+np_to_image(x_64_test, './images_64/test_images')
+np_to_image(x_64_train, './images_64/train_images')
+
+## 128 version
+np_to_image(x_128_valid, './images_128/valid_images')
+np_to_image(x_128_test, './images_128/test_images')
+np_to_image(x_128_train, './images_128/train_images')
