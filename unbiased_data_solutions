@@ -74,5 +74,44 @@ resampled_history = resampled_model.fit(
 
 
 ########## 
-########## METHOD 2: oversampling from minority class with transformations
+########## METHOD 2: oversampling from minority class with transformations - NEEDS REFINING - what transformations to apply?
 ########## 
+import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
+import tensorflow_datasets as tfds
+from tensorflow.keras import layers
+
+# transformations
+data_augmentation = tf.keras.Sequential([
+    layers.RandomFlip("horizontal_and_vertical"),
+    layers.RandomRotation(0.2),
+])
+
+### transform 1 image 9 times
+# Add the image to a batch.
+image = pos_features[0]
+image = tf.expand_dims(image, 0)
+
+plt.figure(figsize=(10, 10))
+for i in range(9):
+  augmented_image = data_augmentation(image)
+  ax = plt.subplot(3, 3, i + 1)
+  plt.imshow(augmented_image[0])
+  plt.axis("off")
+
+
+### transform 25 images
+# Add the image to a batch.
+images = pos_features[0:25]
+
+plt.figure(figsize=(10, 10))
+for i in range(len(images)):
+    image = tf.expand_dims(images[i], 0)
+    augmented_image = data_augmentation(image)
+    ax = plt.subplot(5, 5, i + 1)
+    plt.imshow(augmented_image[0])
+    plt.axis("off")
+
+### transform all images
+transformed_pos_train = data_augmentation(image)
