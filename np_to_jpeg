@@ -1,0 +1,55 @@
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.preprocessing import StandardScaler
+import matplotlib.pyplot as plt # plotting
+import numpy as np # linear algebra
+import os # accessing directory structure
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import seaborn as sns
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, MaxPool2D, Flatten
+from tensorflow.keras.callbacks import EarlyStopping
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+
+### get the data
+x_64_valid = np.load('/kaggle/input/mhsmadataset/x_64_valid.npy')
+x_64_train = np.load('/kaggle/input/mhsmadataset/x_64_train.npy')
+x_64_test = np.load('/kaggle/input/mhsmadataset/x_64_test.npy')
+
+x_128_valid = np.load('/kaggle/input/mhsmadataset/x_128_valid.npy')
+x_128_train = np.load('/kaggle/input/mhsmadataset/x_128_train.npy')
+x_128_test = np.load('/kaggle/input/mhsmadataset/x_128_test.npy')
+
+#from PIL import Image
+#im = Image.fromarray(x1)
+#im.save("x1.jpeg")
+
+
+## function to do it
+def np_to_image(data, path):
+    os.makedirs(path)
+    number_of_images = len(data)
+    for i in range(number_of_images):
+        x = data[i]
+        im = Image.fromarray(x)
+        newpath = os.path.join(path,"x_%s"%(i)+".jpeg")
+        im.save(path+"x_%s"%(i)+".jpeg")
+
+
+#os.makedirs('./images_64/valid_images')
+#os.makedirs('./images_64/train_images')
+#os.makedirs('./images_64/test_images')
+np_to_image(x_64_valid, './images_64/valid_images')
+np_to_image(x_64_test, './images_64/test_images')
+np_to_image(x_64_train, './images_64/train_images')
+
+#os.makedirs('./images_128/valid_images')
+#os.makedirs('./images_128/train_images')
+#os.makedirs('./images_128/test_images')
+np_to_image(x_128_valid, './images_128/valid_images')
+np_to_image(x_128_test, './images_128/test_images')
+np_to_image(x_128_train, './images_128/train_images')
