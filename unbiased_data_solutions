@@ -36,7 +36,19 @@ weighted_history = weighted_model.fit(
 
 ########## 
 ########## METHOD 1: oversampling from minority class
-########## 
+##########
+
+### seperate out the minority class
+train_labels = np.load('/kaggle/input/mhsmadataset/y_vacuole_train.npy')
+bool_train_labels = train_labels != 0
+
+pos_features = x_128_train[bool_train_labels]
+neg_features = x_128_train[~bool_train_labels]
+
+pos_labels = train_labels[bool_train_labels]
+neg_labels = train_labels[~bool_train_labels]
+
+### 
 ids = np.arange(len(pos_features))
 choices = np.random.choice(ids, len(neg_features))
 
@@ -45,6 +57,7 @@ res_pos_labels = pos_labels[choices]
 
 res_pos_features.shape
 
+## combine
 resampled_features = np.concatenate([res_pos_features, neg_features], axis=0)
 resampled_labels = np.concatenate([res_pos_labels, neg_labels], axis=0)
 
@@ -55,6 +68,7 @@ resampled_labels = resampled_labels[order]
 
 resampled_features.shape
 
+##### use this data on the model
 resampled_model = make_model()
 resampled_model.load_weights(initial_weights)
 
@@ -100,7 +114,6 @@ for i in range(9):
   plt.imshow(augmented_image[0])
   plt.axis("off")
 
-
 ### transform 25 images
 # Add the image to a batch.
 images = pos_features[0:25]
@@ -113,5 +126,11 @@ for i in range(len(images)):
     plt.imshow(augmented_image[0])
     plt.axis("off")
 
-### transform all images
-transformed_pos_train = data_augmentation(image)
+## transformed images
+res_pos_features_transformed = data_augmentation(res_pos_features)
+
+## combine with original images
+resampled_features_transformed = np.concatenate([res_pos_features_transformed, neg_features], axis=0)
+resampled_labels = np.concatenate([res_pos_labels, neg_labels], axis=0)
+
+resampled_features_transformed.shape
